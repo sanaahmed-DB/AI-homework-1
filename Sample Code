@@ -1,0 +1,275 @@
+"""
+Name: Sana Ahmed
+Uni: sa389254
+"""
+
+# The function signatures are named for the questions they represent, for
+# instance p1 is problem 1. Please do not modify any of the function signatures
+# as they will be used for grading purposes
+
+import numpy as np
+
+def p1(k: int) -> str:
+    #the function signature indicates that p1 takes in an int k and returns a string
+    out = ""
+
+    for i in range (k, 1, -1):
+      out += str(p1_factorial(i)) + ","
+
+    return out + "1"
+
+
+def p1_factorial(k: int) -> int:
+    if k < 0:
+      print("Cannot calculate factorial of negative number")
+      return 0
+    elif k == 0:
+      return k
+    
+    f = 1
+    for i in range (1, k+1):
+      f = f * i
+
+    return f
+
+def p2_a(x: list, y: list) -> list:
+    out = sorted(y, reverse = True)
+    out.pop()
+
+    return out
+
+
+def p2_b(x: list, y: list) -> list:
+    return x[::-1]
+
+
+def p2_c(x: list, y: list) -> list:
+    return list(set(sorted(x+y)))
+
+
+def p2_d(x: list, y: list) -> list:
+    return [x, y]
+
+
+def p3_a(x: set, y: set, z: set) -> set:
+    return x | y | z
+
+
+def p3_b(x: set, y: set, z: set) -> set:
+    return x & y & z
+
+
+def p3_c(x: set, y: set, z: set) -> set:
+    out_1 = x - y - z
+    out_2 = y - x - z
+    out_3 = z - x - y
+
+    return out_1 | out_2 | out_3
+
+
+def p4_a() -> np.array:
+    return np.array([[1, 1, 1, 1, 1], 
+                     [1, 0, 0, 0, 1], 
+                     [1, 0, 2, 0, 1], 
+                     [1, 0, 0, 0, 1], 
+                     [1, 1, 1, 1, 1]]) 
+
+
+def p4_b(x: np.array) -> list:
+    out = []
+
+    for i in range (0, 5):
+      for j in range (0, 5):
+        if x[i][j] != 0 and x[i][j] != 2:
+          if i + 1 < 5 and j + 2 < 5 and x[i + 1][j + 2] == 2:
+            out.append((i, j))
+
+          if i + 1 < 5 and j - 2 >= 0 and x[i + 1][j - 2] == 2:
+            out.append((i, j))
+
+          if i - 1 >= 0 and j + 2 < 5 and x[i - 1][j + 2] == 2:
+            out.append((i, j))
+
+          if i - 1 >= 0 and j - 2 >= 0 and x[i - 1][j - 2] == 2:
+            out.append((i, j))
+
+          if i + 2 < 5 and j + 1 < 5 and x[i + 2][j + 1] == 2:
+            out.append((i, j))
+
+          if i + 2 < 5 and j - 1 >= 0 and x[i + 2][j - 1] == 2:
+            out.append((i, j))
+
+          if i - 2 >= 0 and j + 1 < 5 and x[i - 2][j + 1] == 2:
+            out.append((i, j))
+
+          if i - 2 >= 0 and j - 1 >= 0 and x[i - 2][j - 1] == 2:
+            out.append((i, j))
+
+    return out
+
+
+def p5_a(x: dict) -> int:
+    out = 0
+
+    for k, v in x.items():
+      if v == []:
+        out += 1
+
+    return out
+
+
+def p5_b(x: dict) -> int:
+    out = 0
+
+    for k, v in x.items():
+      if v != []:
+        out += 1
+
+    return out
+
+
+def p5_c(x: dict) -> list:
+    out = []
+
+    for k, v in x.items():
+      for i in v:
+        if not ((k, i) in out) and not ((i, k) in out):
+          out.append((k,i))
+
+    return out
+
+
+def p5_d(x: dict) -> np.array:
+    out = np.zeros((len(x), len(x)), np.int32)
+
+    ind = []
+    for k, v in x.items():
+      ind.append(k)
+
+    for k, v in x.items():
+      for i in v:
+        ind_k = ind.index(k)
+        ind_v = ind.index(i)
+        out[ind_k][ind_v] = 1
+
+    return out
+
+
+#Question 6
+class PriorityQueue(object):
+    valid = ['apple', 'banana', 'carrot', 'kiwi', 'orange', 'mango', 'pineapple']
+
+    def __init__(self):
+      self.queue = []
+
+    def push(self, x):
+      if x in self.valid:
+        self.queue.append(x)
+      else:
+        print("Cannot push", x, ", not a vlaid entry")
+
+    def pop(self):
+      if self.is_empty():
+        print("Cannot pop, queue is empty")
+      elif len(self.queue) == 1:
+        return self.queue.pop()
+
+      last = self.queue[len(self.queue) - 1]
+
+      if 'mango' in self.queue:
+        ind_m = self.queue.index('mango')
+        if 'pineapple' in self.queue:
+          ind_p = self.queue.index('pineapple')
+          if ind_p < ind_m:
+            self.queue[ind_p] = last
+            self.queue[len(self.queue) - 1] = 'pineapple'
+          else:
+            self.queue[ind_m] = last
+            self.queue[len(self.queue) - 1] = 'mango'
+        else:
+          self.queue[ind_m] = last
+          self.queue[len(self.queue) - 1] = 'mango'
+
+      elif 'pineapple' in self.queue:
+        ind_p = self.queue.index('pineapple')
+        self.queue[ind_p] = last
+        self.queue[len(self.queue) - 1] = 'pineapple'
+
+      elif 'kiwi' in self.queue:
+        ind_k = self.queue.index('kiwi')
+        self.queue[ind_k] = last
+        self.queue[len(self.queue) - 1] = 'kiwi'
+
+      elif 'apple' in self.queue:
+        ind_a = self.queue.index('apple')
+        if 'orange' in self.queue:
+          ind_o = self.queue.index('orange')
+          if ind_o < ind_a:
+            self.queue[ind_o] = last
+            self.queue[len(self.queue) - 1] = 'orange'
+          else:
+            self.queue[ind_a] = last
+            self.queue[len(self.queue) - 1] = 'apple'
+        else:
+          self.queue[ind_a] = last
+          self.queue[len(self.queue) - 1] = 'apple'
+
+      elif 'orange' in self.queue:
+        ind_o = self.queue.index('orange')
+        self.queue[ind_o] = last
+        self.queue[len(self.queue) - 1] = 'orange'
+
+      elif 'banana' in self.queue:
+        ind_b = self.queue.index('banana')
+        self.queue[ind_b] = last
+        self.queue[len(self.queue) - 1] = 'banana'
+          
+      elif 'carrot' in self.queue:
+        ind_c = self.queue.index('carrot')
+        self.queue[ind_c] = last
+        self.queue[len(self.queue) - 1] = 'carrot'
+
+      return self.queue.pop()
+
+    def is_empty(self):
+      if len(self.queue) == 0:
+        return True
+
+      return False
+
+
+if __name__ == '__main__':
+    print(p1(k=8))
+    print('-----------------------------')
+    print(p2_a(x=[], y=[1, 3, 5]))
+    print(p2_b(x=[2, 4, 6], y=[]))
+    print(p2_c(x=[1, 3, 5, 7], y=[1, 2, 5, 6]))
+    print(p2_d(x=[1, 3, 5, 7], y=[1, 2, 5, 6]))
+    print('------------------------------')
+    print(p3_a(x={1, 3, 5, 7}, y={1, 2, 5, 6}, z={7, 8, 9, 1}))
+    print(p3_b(x={1, 3, 5, 7}, y={1, 2, 5, 6}, z={7, 8, 9, 1}))
+    print(p3_c(x={1, 3, 5, 7}, y={1, 2, 5, 6}, z={7, 8, 9, 1}))
+    print('------------------------------')
+    print(p4_a())
+    print(p4_b(p4_a()))
+    print('------------------------------')
+    graph = {
+        'A': ['D', 'E'],
+        'B': ['E', 'F'],
+        'C': ['E'],
+        'D': ['A', 'E'],
+        'E': ['A', 'B', 'C', 'D'],
+        'F': ['B'],
+        'G': []
+    }
+    print(p5_a(graph))
+    print(p5_b(graph))
+    print(p5_c(graph))
+    print(p5_d(graph))
+    print('------------------------------')
+    pq = PriorityQueue()
+    pq.push('apple')
+    pq.push('kiwi')
+    pq.push('orange')
+    while not pq.is_empty():
+        print(pq.pop())
